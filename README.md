@@ -1,4 +1,4 @@
-words
+metonymic
 ==================
 
 Flask app that lists Tumblr posts as a dictionary.
@@ -26,13 +26,13 @@ $ cp .env.sample .env
 Create a local database:
 
 ```
-$ createdb words-dev
+$ createdb metonymic-dev
 ```
 
 Set the DATABASE_URL appropriately in your .env file:
 
 ```
-DATABASE_URL=postgresql://localhost/words-dev
+DATABASE_URL=postgresql://localhost/metonymic-dev
 ```
 
 
@@ -40,7 +40,7 @@ Load the local database schema:
 
 ```
 $ foreman run python
->>> from words import database;
+>>> from metonymic import database;
 >>> database.init_db()
 ```
 

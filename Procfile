@@ -1,1 +1,1 @@
-web: gunicorn words:app
+web: gunicorn metonymic:app

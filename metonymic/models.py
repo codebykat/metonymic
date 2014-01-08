@@ -1,6 +1,6 @@
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, Text, DateTime
 from sqlalchemy.orm import relationship, backref
-from words.database import Base, db_session
+from metonymic.database import Base, db_session
 
 
 class Post( Base ):

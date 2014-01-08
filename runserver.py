@@ -1,2 +1,2 @@
-from words import app
+from metonymic import app
 app.run( debug=True )
