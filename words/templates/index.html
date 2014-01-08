@@ -1,1 +1,9 @@
 hello words
+
+{% for post in posts %}
+	{% if post.title[0].upper() != letter %}
+		{% set letter = post.title[0].upper() %}
+		<h1>{{ letter }}</h1>
+	{% endif %}
+	<li><a href='{{ post.post_url }}'>{{ post.title }}</a></li>
+{% endfor %}

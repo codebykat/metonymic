@@ -6,14 +6,13 @@ from words.database import Base, db_session
 class Post( Base ):
 	__tablename__ = 'posts'
 	id = Column( Integer, primary_key=True )
-	title = Column( String( 255 ), unique=True )
-	body = Column( Text )
-	post_url = Column( String( 255 ) )
-	timestamp = Column( DateTime )
-	source_url = Column( String( 255 ) )
+	title = Column( Text, unique=True )
+	post_url = Column( Text )
+	# timestamp = Column( DateTime )
 
-	#def __init__( self, text=None ):
-	#	self.text = text
+	def __init__( self, title=None, post_url=None ):
+		self.title = title
+		self.post_url = post_url
 
 	def __repr__(self):
 		return self.title
