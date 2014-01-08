@@ -1,9 +1,52 @@
-hello words
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+	<title>{{ bloginfo['title'] }}</title>
 
-{% for post in posts %}
-	{% if post.title[0].upper() != letter %}
-		{% set letter = post.title[0].upper() %}
-		<h1>{{ letter }}</h1>
-	{% endif %}
-	<li><a href='{{ post.post_url }}'>{{ post.title }}</a></li>
-{% endfor %}
+	<!-- Reset CSS -->
+    <link rel="stylesheet" href="http://static.tumblr.com/thpaaos/DIcklyl4z/reset.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/tumblr.css" type="text/css" >
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css" >
+</head>
+<body>
+
+	<section id='container' class='group'>
+		<header id='header'>
+			<section id='blog_info'>
+				<h1>{{ bloginfo['title'] }}</h1>
+				<h2>a journal of words</h2>
+			</section>
+		</header>
+
+		<!-- <p>{{ bloginfo['description'] }}</p> -->
+
+		<ul id='posts'>
+			{% for post in posts %}
+				{% if post.title[0].upper() != letter %}
+					{% if letter %}
+								</section>
+							</section>
+						</li>
+					{% endif %}
+
+					{% set letter = post.title[0].upper() %}
+					<li class="post group">
+						<section class="group caption_and_post_info">
+							<ul class="word_post_info floating">
+								<li><h2>{{ letter }}</h2></li>
+							</ul>
+							<section class="caption group">
+				{% endif %}
+				<div>
+					<a href='{{ post.post_url }}'>{{ post.title }}</a>
+				</div>
+			{% endfor %}
+		</ul>
+
+		<footer id='footer'>
+		made by <a href='http://github.com/codebykat'>Kat (<a href='http://twitter.com/wirehead2501'>@wirehead2501</a>).  <a href='https://github.com/codebykat/metonymic'>Pull requests welcome!</a>
+		</footer>
+
+	</section>
+</body>
+</html>

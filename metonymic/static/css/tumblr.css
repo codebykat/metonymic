@@ -1,0 +1,389 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 24px;
+    margin: 0;
+    padding: 0;
+}
+
+*:active, *:focus { outline-width: 0px; }
+img { max-width: 100% }
+.post .top.media img { width: 100%; }
+a { text-decoration: none; color: #4EA3D0; }
+a img { border-width: 0px; }
+strong { font-weight: bold; }
+em { font-style: italic; }
+
+.group:after {
+    visibility: hidden;
+    display: block;
+    content: "";
+    clear: both;
+    height: 0;
+    }
+* html .group             { zoom: 1; } /* IE6 */
+*:first-child+html .group { zoom: 1; } /* IE7 */
+
+#container {
+    width: 950px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+#header {
+    height: 48px;
+    margin: 0 0 60px 0;
+}
+
+#blog_info {
+    width: 700px;
+    /*margin: 0 60px 0 0;*/
+    /*float: left;*/
+    margin: 0 auto;
+}
+
+#blog_info h1 {
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    line-height: 36px;
+    margin: 8px 0 0 0;
+}
+
+#blog_info h1 a {
+    color: #333333;
+}
+                
+#blog_info h1 a:hover {
+    color: #000;
+}
+
+#blog_info h1 a:active {
+    position: relative;
+    top: 1px;
+}
+
+#blog_info p, #blog_info .cont {
+    color: #646464;
+    margin-top: 7px;
+}
+
+#posts {
+    width: 700px;
+    color: #4C4C4C;
+    margin: 0 auto;
+    /*margin: 0 60px 0 0;*/
+    /*float: left;*/
+}
+
+#posts .post {
+    list-style-type: none;
+    border-bottom: 1px solid #E6E6E6;
+    margin: 0 0 45px 0;
+    padding: 0 0 45px 0;
+}
+
+
+.media img {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+#posts .post .caption_and_post_info.after_top_part {
+    border-top: 0;
+    margin: 30px auto auto auto;
+    padding-top: 0;
+}
+
+.post .caption {
+    width: auto;
+    float: none;
+}
+
+
+.post .caption {
+    width: 513px;
+    float: right;
+}
+
+
+.content_source {
+    margin-bottom: 20px;
+}
+
+.content_source img {
+    margin: 0 0 0 4px !important;
+    opacity: 0.7;
+    vertical-align: middle;
+}
+
+.caption a, .description a {
+    color: #4EA3D0;
+    padding: 0 1px;
+}
+
+.caption a:hover, .description a:hover {
+    background: rgba(78,163,208, 0.13);
+}
+
+.caption a:active, .description a:active {
+    background: rgba(78,163,208, 0.2);
+}
+
+.caption h2 {
+    font-size: 32px;
+    line-height: 33px;
+    margin: 0 0 18px 0;
+}
+
+.caption h2 a {
+    color: #333;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+.caption h2 a:hover {
+    color: #4EA3D0;
+    background: transparent;
+}
+                    
+.caption blockquote {
+    border-left: 2px solid #E6E6E6;
+    padding: 1px 0 1px 20px;
+}
+
+.caption pre {
+    background: #eee;
+    font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Anonymous Pro", "Courier New", monospace, serif;
+    overflow: scroll;
+    padding: 10px;
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 19px;
+}
+
+.caption p,
+.caption ol,
+.caption ul,
+.caption pre,
+.caption h1,
+.caption h2,
+.post h3,
+.caption h4,
+.caption h5,
+.caption blockquote,
+.caption img,
+.caption embed,
+.caption object {
+    margin: 0 0 20px 0;
+}
+
+.caption p:empty {
+    display: none;
+}
+
+.caption iframe {
+    display: block !important;
+}
+
+.post .caption ul,
+.post .caption ol {
+    margin-left: 18px;
+}
+
+.caption .question {
+    display: block;
+    padding: 15px;
+    font-size: 15px;
+}
+
+.caption .answer {
+    margin-top: 20px;
+}
+
+.caption .asker {
+    line-height: 24px;
+    margin: 25px 20px 0 23px;
+}
+
+.caption .asker img {
+    float: left;
+    margin: 0 7px 0 0;
+}
+
+.caption .asker a {
+    margin-left: 0;
+}
+
+.caption .quote {
+    color: #333;
+    font-weight: bold;
+}
+
+.quote span {
+    display: inline-block;
+}
+
+.quote.short_text {
+    font-size: 50px;
+    letter-spacing: -2px;
+    line-height: 48px;
+    margin: 0 0 18px 0;
+}
+
+.quote.short_text span {
+    margin: 0 0 0 -22px;
+}
+
+.quote.medium_text {
+    font-size: 36px;
+    letter-spacing: -1px;
+    line-height: 36px;
+    margin: 0 0 20px 0;
+}
+
+.quote.medium_text span {
+    margin: 0 0 0 -13px;
+}
+
+.quote.long_text,
+.quote.text {
+    font-size: 24px;
+    line-height: 27px;
+    margin: 0 0 20px 0;
+}
+
+.quote.long_text span {
+    margin: 0 0 0 -9px;
+}
+
+.quote.larger_text {
+    font-size: 50px !important;
+    letter-spacing: -2px !important;
+    line-height: 48px !important;
+    margin: 0 0 18px 0 !important;
+}
+
+.quote.larger_text span {
+    margin: 0 0 0 -22px !important;
+}
+
+.quote_source {
+    margin: 0 0 20px 0 !important;
+}
+
+.caption .conversation {
+    margin-left: 0 !important;
+    margin-bottom: 30px;
+    list-style-type: none;
+}
+
+.post .post_info {
+    width: auto;
+    font-size: 12px;
+    font-family: 'Times New Roman', Times, serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    list-style-type: none;
+    -webkit-font-smoothing: subpixel-antialiased;
+    margin: 1px 0 0 -3px;
+    overflow: hidden;
+}
+
+.post_info li {
+    line-height: 14px;
+    margin-bottom: 10px;
+    float: left;
+}
+
+.post_info li a {
+    margin: 0 10px 0 0;
+    padding: 0 2px 0 5px;
+}
+
+.post_info .timestamp {
+    color: #4c4c4c;
+    padding: 0 2px 0 5px;
+    display: inline-block;
+}
+
+.post_info .timestamp:hover {
+    background: rgba(0,0,0,.08);
+}
+
+.post_info .timestamp:active {
+    background: rgba(0,0,0,.1);
+}
+
+.post_info .notecount {
+    color: #4c4c4c;
+    padding: 0 2px 0 5px;
+    display: inline-block;
+}
+
+.post_info .notecount:hover {
+    background: rgba(0,0,0,.08);
+}
+
+.post_info .notecount:active {
+    background: rgba(0,0,0,.1);
+}
+
+/* Baselines */
+
+
+.timestamp.has_caption {
+    margin-top: 6px;
+}
+
+.timestamp.has_caption.with_title {
+    margin-top: 18px
+}
+
+
+.tag {
+    color: #4EA3D0;
+    display: table;
+}
+
+.tag span {
+    color: #4c4c4c;
+    display: table-cell;
+}
+
+.tag:hover {
+    background: rgba(78,163,208, 0.13);
+}
+
+.tag:hover span {
+    color: #4EA3D0;
+}
+
+.tag:active {
+    background: rgba(78,163,208, 0.2);
+}
+
+.post .post_info.floating {
+    width: 157px;
+    float: left;
+}
+
+.post .post_info.floating li {
+    float: none;
+}
+
+
+/* Protection for parents that have floating children */
+#header:after,
+#container:after,
+.caption_and_post_info:after,
+#footer:after
+.buttons:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
