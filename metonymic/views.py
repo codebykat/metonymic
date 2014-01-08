@@ -6,6 +6,8 @@ from flask import render_template, request
 
 from os import environ
 
+from sqlalchemy import func
+
 import json
 from urllib import urlencode
 from urllib2 import urlopen
@@ -14,7 +16,7 @@ from urllib2 import urlopen
 def index():
 	load_new_posts()
 
-	posts = Post.query.order_by('title')
+	posts = Post.query.order_by( func.upper( Post.title ) )
 
 	return render_template( 'index.html', posts=posts )
 
