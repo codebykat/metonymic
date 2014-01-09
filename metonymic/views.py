@@ -1,6 +1,6 @@
 from metonymic import app
 from metonymic.database import db_session
-from metonymic.models import Post
+from metonymic.models import Post, Blog
 
 from flask import render_template, request
 
@@ -15,12 +15,15 @@ from urllib2 import urlopen
 @app.route( '/' )
 def index():
 	load_new_posts()
+	get_blog_info()
 
 	posts = Post.query.order_by( func.upper( Post.title ) )
 
-	return render_template( 'index.html', posts=posts )
+	bloginfo = Blog.query.get( 1 )
 
-# helper function
+	return render_template( 'index.html', posts=posts, bloginfo=bloginfo )
+
+# helper functions
 def load_new_posts():
 	blogname = environ['BLOGNAME']
 	api_key = environ['API_KEY']
@@ -63,6 +66,35 @@ def load_new_posts():
 			else:  # no title
 				print post
 
+
+	db_session.commit()
+
+	return True
+
+def get_blog_info():
+	blogname = environ['BLOGNAME']
+	api_key = environ['API_KEY']
+	tumblr_url = 'http://api.tumblr.com/v2/blog/' + blogname + '.tumblr.com/info'
+	args = urlencode( { 'api_key': api_key } )
+
+	fp = urlopen( tumblr_url + '?' + args )
+	results = json.load( fp )
+
+	if 200 != results['meta']['status']:
+		print "error fetching bloginfo"
+		return False
+
+	b = Blog.query.get(1)
+	if b is None:
+		b = Blog()
+		db_session.add( b )
+
+	bloginfo = results['response']['blog']
+	b.title = bloginfo['title']
+	b.total_posts = bloginfo['posts']
+	b.last_updated = bloginfo['updated']
+	b.description = bloginfo['description']
+	b.url = bloginfo['url']
 
 	db_session.commit()
 
