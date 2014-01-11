@@ -35,13 +35,22 @@ Set the DATABASE_URL appropriately in your .env file:
 DATABASE_URL=postgresql://localhost/metonymic-dev
 ```
 
-
 Load the local database schema:
 
 ```
 $ foreman run python
->>> from metonymic import database;
+>>> from metonymic import database
 >>> database.init_db()
+```
+
+Set your blog name and API key in the .env file.
+
+Then, do the initial load of blog info and posts (this might take a few minutes if you have many posts):
+```
+$ foreman run python
+>>> from metonymic import helpers
+>>> helpers.load_blog_info()
+>>> helpers.load_posts()
 ```
 
 #### Running the server

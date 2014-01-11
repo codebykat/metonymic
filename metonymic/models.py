@@ -26,5 +26,8 @@ class Blog( Base ):
 	description = Column( Text )
 	last_updated = Column( Integer )
 
+	info_last_updated = Column( Integer )
+	posts_last_updated = Column( Integer )
+
 	def __repr__( self ):
 		return self.title + ' (' + str( self.total_posts ) + ' posts)'
