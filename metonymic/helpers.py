@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 def load_blog_info():
 	# only update info every five minutes
 	b = Blog.query.get( 1 )
-	if ( b is not None ) and ( datetime.now() - b.info_last_updated <= timedelta( minutes=5 ) ):
+	if ( b is not None ) and ( datetime.utcnow() - b.info_last_updated <= timedelta( minutes=5 ) ):
 		return True
 
 	wordpress = environ.get( 'WORDPRESS', False )
@@ -62,7 +62,7 @@ def load_blog_info():
 		b.description = bloginfo['description']
 		b.url = bloginfo['url']
 
-	b.info_last_updated = datetime.now()
+	b.info_last_updated = datetime.utcnow()
 
 	db_session.commit()
 
@@ -116,11 +116,9 @@ def load_wordpress_posts():
 
 	args = { 'offset': 0, 'fields': 'title,URL', 'number': posts_to_request }
 
-	# probably bugs because TIME ZONES :[
-	# note: Heroku seems to be in UTC, so this is okay for now
-	# locally, it worked when I used '-07:00'
+	# subtract 7 because the blog is in PST and we're saving timestamps in UTC
 	if b.posts_last_updated:
-		args['after'] = b.posts_last_updated.isoformat() + '+00:00'
+		args['after'] = ( b.posts_last_updated - timedelta( hours=7 ) ).isoformat()
 
 	while True:
 		sys.stderr.write( '.' )
@@ -142,7 +140,7 @@ def load_wordpress_posts():
 		else:
 			args['offset'] += posts_to_request
 
-	b.posts_last_updated = datetime.now()
+	b.posts_last_updated = datetime.utcnow()
 	b.total_posts = Post.query.count()
 	db_session.commit()
 
@@ -167,15 +165,11 @@ def load_tumblr_posts():
 
 	# load posts until we run out, or find one we already loaded
 	posts = []
-	offset = 0
-
+	posts_to_request = 20
 	found_posts = False
 
 	while not found_posts:
-
-		args = urlencode( { 'api_key': api_key, 'offset': offset } )
-
-		fp = urlopen( tumblr_url + '?' + args )
+		fp = urlopen( tumblr_url + '?' + urlencode( args ) )
 		results = json.load( fp )
 
 		# check return value.  TODO handle this better.
@@ -183,10 +177,10 @@ def load_tumblr_posts():
 			print "error fetching posts; no new posts loaded"
 			break
 
-		if len( results['response']['posts'] ) == 0:
+		if len( results['response']['posts'] ) < posts_to_request:
 			break
 
-		offset = offset + 20
+		args['offset'] += posts_to_request
 
 		for post in results['response']['posts']:
 
