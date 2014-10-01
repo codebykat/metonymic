@@ -14,7 +14,7 @@
 		<header id='header'>
 			<section id='blog_info'>
 				<h1>{% if bloginfo %}{{ bloginfo['title'] }}{% else %}metonymic{% endif %}</h1>
-				<h2>a journal of words</h2>
+				<h2>{% if bloginfo %}{{ bloginfo['description'] }}{% else %}a journal of words{% endif %}</h2>
 			</section>
 		</header>
 

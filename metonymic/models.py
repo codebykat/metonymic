@@ -14,7 +14,7 @@ class Post( Base ):
 		self.post_url = post_url
 
 	def __repr__( self ):
-		return self.title
+		return self.title.encode( 'utf-8' )
 
 
 class Blog( Base ):
@@ -26,8 +26,8 @@ class Blog( Base ):
 	description = Column( Text )
 	last_updated = Column( Integer )
 
-	info_last_updated = Column( Integer )
-	posts_last_updated = Column( Integer )
+	info_last_updated = Column( DateTime )
+	posts_last_updated = Column( DateTime )
 
 	def __repr__( self ):
-		return self.title + ' (' + str( self.total_posts ) + ' posts)'
+		return self.title.encode( 'utf-8' ) + ' (' + str( self.total_posts ) + ' posts)'

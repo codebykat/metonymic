@@ -1,7 +1,7 @@
 metonymic
 ==================
 
-Flask app that lists Tumblr posts as a dictionary.
+Flask app that lists WordPress or Tumblr posts as a dictionary.
 
 ## Local Development
 
@@ -18,8 +18,15 @@ Requirements:
 $ virtulenv env
 $ source env/bin/activate
 $ pip install -r requirements.txt
+```
+
+#### Configure the app
+
+```bash
 $ cp .env.sample .env
 ```
+
+Set your blog info (and, for Tumblr, API key) in the .env file.
 
 #### Local Database 
 
@@ -43,8 +50,6 @@ $ foreman run python
 >>> database.init_db()
 ```
 
-Set your blog name and API key in the .env file.
-
 Then, do the initial load of blog info and posts (this might take a few minutes if you have many posts):
 ```
 $ foreman run python
@@ -59,4 +64,10 @@ Start foreman, and visit your development server at http://localhost:5000
 
 ```
 $ foreman start
+```
+
+Note: gunicorn prevents Flask from displaying a full trace. For debugging, it's easier to run Flask without gunicorn:
+
+```
+$ foreman run python runserver.py
 ```
