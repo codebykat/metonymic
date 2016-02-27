@@ -1,0 +1,33 @@
+/*body { padding-top: 70px; }*/
+.step {
+	margin-top: 25px;
+}
+#quote-input {
+	width: 80%;
+	height: 200px;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+#formatted-quote a {
+	color: inherit;
+}
+#formatted-quote a:hover, #formatted-quote .selected {
+	text-decoration: none;
+	background-color: lightblue;
+}
+#formatted-quote a:visited {
+	text-decoration: none;
+}
+#selected-word {
+	text-align: center;
+}
+#goodreads-results, #word-definitions {
+	max-height: 400px;
+	overflow-y: auto;
+}
+/*.book-title {
+	width: 150px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}*/

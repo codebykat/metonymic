@@ -1,0 +1,30 @@
+.panel-body {
+	/*max-height: 150px;*/
+	/*overflow-y: auto;*/
+}
+.panel a, .panel a:hover {
+	text-decoration: none;
+	color: inherit;
+}
+.panel-body:hover {
+	background-color: lightblue;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+}
+.panel .glyphicon {
+	display: none;
+	position: absolute;
+	top: 12px;
+	right: 25px;
+	opacity: 0.25;
+	filter: alpha(opacity=25);
+	font-size: 18px;
+	line-height: 1.33;
+}
+.panel:hover .glyphicon {
+	display: block;
+}
+.progress {
+	margin-bottom: -10px;
+	height: 5px;
+}

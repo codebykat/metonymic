@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>words words words</title>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+		<!-- pluralize help -->
+		<script src="js/pluralize/pluralize.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="css/add.css">
+		<script type="text/javascript" src="js/login.js"></script>
+		<script type="text/javascript" src="js/navbar.js"></script>
+		<script type="text/javascript" src="js/settings.js"></script>
+		<script type="text/javascript" src="js/add.js"></script>
+	</head>
+
+	<body>
+		<div id="navbar"></div>
+
+		<div id="main" class="container">
+			<div id='alert-header'></div>
+
+			<div id="step-0" class="step">
+				<div>
+					<textarea id="quote-input" class="form-control" placeholder="paste full quote from clippings.io"></textarea>
+					<blockquote id="formatted-quote" style="display:none;"></blockquote>
+
+					<div id="book-meta-edit" class="form-group" style='display:none;'>
+						<div class="input-group input-group-sm">
+							<span class="input-group-addon">author</span>
+							<input type='text' id="author-edit" class="form-control" width='100' />
+						</div>
+						<div class="input-group input-group-sm" id="title-edit-group">
+							<span class="input-group-addon">title</span>
+							<input type='text' class="form-control" id='title-edit' width='200' />
+						</div>
+					</div>
+
+					<div id="book-meta" style="display:none;">
+						&mdash; <span id="author"></span>, <span id="title"></span>
+						<a href='' id='edit-book-meta'>
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class='row'>
+				<div class='col-xs-6'>
+					<div id="step-1" class="step" style='display:none;'>
+						<h1 id='goodreads-results-header'>Goodreads Results</h1>
+						<div id="goodreads-results" class="list-group"></div>
+					</div>
+				</div>
+
+				<div class='col-xs-6'>
+					<div id="step-2" class="step" style='display:none;'>
+						<h1 id="selected-word"></h1>
+						<div id="word-definitions" class="list-group" style='display:none;' ></div>
+					</div>
+				</div>
+			</div>
+
+			<button id="preview-post" type="button" class="btn btn-primary" style="display:none;">Preview Post</button>
+
+			<div class='step-3 step'>
+			</div>
+
+		</div>
+	</body>
+</html>
