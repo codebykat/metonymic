@@ -152,9 +152,7 @@ jQuery( function($) {
 				.text( function() { return connected ? "connected " : "disconnected " } )
 				.append( $( document.createElement( "a" ) )
 					.attr( "href",
-						"https://public-api.wordpress.com/oauth2/authorize?client_id=44575"
-						+ "&redirect_uri=" + encodeURIComponent( document.location.href + '?wpcom=' )
-						+ "&response_type=token"
+						window.loginURL + "&redirect_uri=" + encodeURIComponent( document.location.href )
 					)
 					.append( $( document.createElement( "span" ) )
 						.addClass( function() { return connected ? "glyphicon glyphicon-refresh" : "glyphicon glyphicon-new-window" } )

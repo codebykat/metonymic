@@ -1,3 +1,11 @@
+var development_client_id = 34284,
+    production_client_id = 44575,
+    client_id = production_client_id;
+
+if ( window.location.hostname === "localhost" ) {
+	client_id = development_client_id;
+}
+window.loginURL = "https://public-api.wordpress.com/oauth2/authorize?client_id=" + client_id + "&response_type=token";
 
 jQuery( function($) {
 

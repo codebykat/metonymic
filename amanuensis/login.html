@@ -29,9 +29,8 @@
 	</body>
 
 	<script type="text/javascript">
-		var loginLink = "https://public-api.wordpress.com/oauth2/authorize?client_id=44575"
-		              + "&redirect_uri=" + encodeURIComponent( document.URL.substr( 0, document.URL.lastIndexOf( '/' ) + 1 ) )
-		              + "&response_type=token";
+		var loginLink = window.loginURL
+		              + "&redirect_uri=" + encodeURIComponent( document.URL.substr( 0, document.URL.lastIndexOf( '/' ) + 1 ) );
 		$( '#loginlink' ).attr( 'href', loginLink );
 	</script>
 </html>
