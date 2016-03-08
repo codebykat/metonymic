@@ -3,11 +3,6 @@ jQuery( function($) {
 	// update navbar
 	$( '#results-count' ).html( localStorage.inboxCount );
 
-	var id = window.location.search.split( '=' )[1];
-	if ( id ) {
-		loadQuoteFromAirtable( id );
-	}
-
 	// refresh records list on settings update
 	$( "#save-settings" ).click( function() {
 		// @todo track what actually changed instead of redoing everything
@@ -19,7 +14,7 @@ jQuery( function($) {
 
 			$( '#formatted-quote' ).hide();
 
-			loadQuoteFromAirtable( id );
+			loadAirtableRecord( id );
 		}
 		// redo selected word search
 		if ( $( '#selected-word' ).text() ) {
@@ -54,8 +49,8 @@ jQuery( function($) {
 		linkifyQuote();
 	} );
 
-	function loadQuoteFromAirtable( id ) {
-		var url = localStorage.getItem( "airtable-url" ),
+	function loadAirtableRecord( id ) {
+		var url = localStorage.getItem( "airtable-url" );
 		    api_key = localStorage.getItem( "airtable-key" );
 
 		if ( ! url || ! api_key ) {
@@ -69,18 +64,24 @@ jQuery( function($) {
 		$( '#alert-header' ).empty();
 		url = $( '#airtable-prefix' ).text() + url;
 
-		var args = {
-			api_key: api_key
-		};
-
 		$.ajax( {
 			url: url + '/' + id,
-			data: args,
 			dataType: 'json',
+			beforeSend : function( xhr ) {
+				xhr.setRequestHeader( 'Authorization', 'Bearer ' + api_key );
+			},
 			success: function( data ) {
 				$( '#quote-input' ).val( data.fields.Content );
 				$( '#author-edit').val( data.fields.Author );
 				$( '#title-edit' ).val( data.fields.Title );
+
+				if ( data.fields.posts ) {
+					var posts = JSON.parse( data.fields.posts );
+					$.each( posts, function( key, value ) {
+						var postURL = 'https://wordpress.com/post/' + localStorage.getItem( 'wpcom-site-id' ) + '/' + value;
+						$( '#post-list' ).prepend( "<a class='btn btn-default' href='" + postURL + "'>Edit post: " + key + "</a>" );
+					} )
+				}
 				updateTitleAndAuthor();
 				linkifyQuote();
 			},
@@ -89,6 +90,43 @@ jQuery( function($) {
 				$( '#alert-header' ).replaceWith( errorDiv );
 			}
 		} );
+	}
+
+	function deleteAirtableRecord( id ) {
+		if ( ! confirm( "are you sure you want to delete this record?" ) ) {
+			return;
+		}
+
+		var id = window.location.search.split( '=' )[1];
+		if ( ! id ) { return; }
+
+		var url = $( '#airtable-prefix' ).text() + localStorage.getItem( "airtable-url" );
+
+		$.ajax( {
+			url: url + '/' + id,
+			method: 'DELETE',
+			dataType: 'json',
+			beforeSend : function( xhr ) {
+				xhr.setRequestHeader( 'Authorization', 'Bearer ' + localStorage.getItem( "airtable-key" ) );
+			},
+			success: function( data ) {
+				alert( "record deleted" );
+				document.location.href = './';
+			},
+			error: function( jqXHR, textStatus, errorThrown ) {
+				alert( "error deleting: " + textStatus );
+			}
+		} );
+	}
+
+	function updateAirtableRecord() {
+
+	}
+
+	var id = window.location.search.split( '=' )[1];
+	if ( id ) {
+		loadAirtableRecord( id );
+		$( '#delete-record' ).click( deleteAirtableRecord );
 	}
 
 	/* title and author editing */
@@ -158,10 +196,9 @@ jQuery( function($) {
 					} );
 				}
 				$( '#goodreads-results' ).find( 'button.book-card' ).click( function( e ) {
-					$( '#goodreads-results' ).css( { 'height': 'auto', 'overflow-y': 'auto' } )
-					    .find( 'button.book-card' ).css( { 'display': 'none' } );
-					$( e.currentTarget ).css( { 'display': '' } ).addClass( 'selected' );
-					$( '#goodreads-results-header' ).html( '' );
+					$( '#goodreads-results' ).find( 'button.book-card' ).toggle();
+					$( e.currentTarget ).toggleClass( 'selected' ).show();
+					$( '#goodreads-results-header' ).toggle();
 					maybeShowPreviewButton();
 				} );
 			}
@@ -214,7 +251,7 @@ jQuery( function($) {
 				return;
 			}
 
-			linkifiedQuote += " " + beginningPunctuation + "<a href='' class='wordlink' id='" + e + "'>" + e + "</a>" + endPunctuation;
+			linkifiedQuote += " " + beginningPunctuation + "<a href='' class='wordlink'>" + e + "</a>" + endPunctuation;
 		} );
 
 		// replace textarea with blockquote
@@ -229,7 +266,7 @@ jQuery( function($) {
 	function highlightWord( e ) {
 		e.preventDefault();
 		var word = e.target.innerHTML;
-		$( '.selected' ).removeClass( 'selected' );
+		$( '#formatted-quote' ).find( '.selected' ).removeClass( 'selected' );
 		$( e.target ).addClass( 'selected' );
 		$( '#selected-word' ).text( word );
 
@@ -280,21 +317,14 @@ jQuery( function($) {
 				}
 				data.forEach( function( definition ) {
 					$( '#selected-word' ).text( definition.word );
-					var partOfSpeech = '<i>(' + definition.partOfSpeech + ')</i>';
-					var attribution = '<small>' + definition.attributionText + '</small>';
-					var attribution = '<small>' + definition.sourceDictionary + '</small>';
-					$( '#word-definitions' ).append( '<button class="word-definition list-group-item">' + partOfSpeech + ' ' + definition.text + ' ' + attribution + '</button>' );
+					var partOfSpeech = '<em>(' + definition.partOfSpeech + ')</em>';
+					var attribution = '<span class="attribution"><small>' + definition.attributionText + '</small></span>';
+					$( '#word-definitions' ).append( '<button class="word-definition list-group-item">' + partOfSpeech + ' <span class="definition">' + definition.text + '</span><br />' + attribution + '</button>' );
 				} );
 				$( '#word-definitions' ).show();
 				$( '#word-definitions' ).find( 'button.word-definition' ).click( function( e ) {
-					var target = $( e.currentTarget );
-					target.addClass( 'selected' );
-
-					// @todo - if clicked a second time, restore the other panels, undo the below
-					$( '#word-definitions' )
-					    .css( { 'height': 'auto', 'overflow-y': 'auto' } )
-					    .find( 'button.word-definition' ).css( { 'display': 'none' } );
-					target.css( { 'display': '' } );
+					$( '#word-definitions' ).find( 'button.word-definition' ).toggle();
+					$( e.currentTarget ).toggleClass( 'selected' ).show();
 					maybeShowPreviewButton();
 				} );
 			}
@@ -304,31 +334,69 @@ jQuery( function($) {
 	function maybeShowPreviewButton() {
 		if ( ( $( '#word-definitions' ).find( 'button.selected' ).length === 1 )
 			&& ( $( '#goodreads-results' ).find( 'button.selected' ).length === 1 ) ) {
-				$( '#preview-post' ).css( 'display', '' );
-			}
+				$( '#preview-post' ).prop( 'disabled', '' );
+		} else {
+			$( '#preview-post' ).prop( 'disabled', 'disabled' );
+		}
 	}
 
 	function buildWPPost() {
-		var title = $( '#selected-word' ).text();
-		var content = $( '#word-definitions' ).find( 'button:visible' ).text();
-		var source = $( '#goodreads-results' ).find( 'button:visible' ).text();
-		console.log(title);
-		console.log(content);
-		console.log(source);
+		var title = $( '#selected-word' ).text(),
+			selected_definition = $( '#word-definitions' ).find( 'button.selected' ),
+		    definition = selected_definition.find( '.definition' ).text(),
+		    wordnik_link = '(via <a href="https://wordnik.com/words/' + title + '">Wordnik</a>)',
+		    attribution = selected_definition.find( '.attribution' ).text(),
+		    source = $( '#goodreads-results' ).find( 'button.selected' ).text(),
+		    goodreads_link = $( '#goodreads-results' ).find( 'button.selected' ).find( 'a' ).attr( 'href' ),
+		    quote_content = $( '#quote-input' ).val(),
+		    book_title = $( '#title' ).text(),
+		    author = $( '#author' ).text(),
+		    publicize_message = title + ' - ' + definition;
+
+
+		// @todo pull book title from Goodreads info, not edit box?
+
+		var content = "<p>" + definition + "</p>"
+		            + "<blockquote>" + quote_content
+		            + "<footer><cite>" + author + ", "
+		            + "<a href='" + goodreads_link + "'>" + book_title + "</a></cite></footer></blockquote>"
+		            + "<p><small> Definition " + attribution
+		            + " " + wordnik_link + "</small></p>";
+
+		data = { title: title,
+			     content: content,
+			     status: 'draft',
+			     publicize_message: publicize_message,
+			     tags: author,
+			     fields: 'ID'
+			   };
+
+		makeWordPressPost( data );
 	}
 	$( '#preview-post' ).click( buildWPPost );
 
-	function makeWordPressPost() {
+	function makeWordPressPost( postData ) {
 		jQuery.ajax( {
-		    url: 'https://public-api.wordpress.com/rest/v1.1/sites/' + site_id + '/posts/new',
-		    type: 'POST',
-		    data: { content: 'testing test' },
-		    beforeSend : function( xhr ) {
-		        xhr.setRequestHeader( 'Authorization', 'BEARER ' + access_token );
-		    },
-		    success: function( response ) {
-		        // response
-		    }
+			url: 'https://public-api.wordpress.com/rest/v1.1/sites/' + localStorage.getItem( 'wpcom-site-id' ) + '/posts/new',
+			type: 'POST',
+			data: postData,
+			beforeSend : function( xhr ) {
+			    xhr.setRequestHeader( 'Authorization', 'BEARER ' + localStorage.getItem( 'wpcom-auth-token' ) );
+			},
+			success: function( response ) {
+				var posts = {};
+				posts[ response.title ] = response.ID;
+
+				// add a view post button
+				var postURL = 'https://wordpress.com/post/' + localStorage.getItem( 'wpcom-site-id' ) + '/' + response.ID;
+				$( '#post-list' ).prepend( "<a class='btn btn-default' href='" + postURL + "'>Edit post: " + response.title + "</a>" );
+
+				console.log( posts );
+
+				// @todo save postID back to Airtable record
+				// updateAirtableRecord( posts );
+				console.log( response );
+			}
 		} );		
 	}
 
