@@ -356,11 +356,11 @@ jQuery( function($) {
 
 		// @todo pull book title from Goodreads info, not edit box?
 
-		var content = "<p>" + definition + "</p>"
+		var content = "<p><strong>" + definition + "</strong></p>"
 		            + "<blockquote>" + quote_content
 		            + "<footer><cite>" + author + ", "
 		            + "<a href='" + goodreads_link + "'>" + book_title + "</a></cite></footer></blockquote>"
-		            + "<p><small> Definition " + attribution
+		            + "<p><small>Definition " + attribution
 		            + " " + wordnik_link + "</small></p>";
 
 		data = { title: title,
