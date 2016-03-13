@@ -307,7 +307,7 @@ jQuery( function($) {
 			success: function( data ) {
 				if ( data.length === 0 ) {
 					// @todo: Add Google search results (API?) or Wikipedia link/results?
-					var googleLink = "<a href='https://www.google.com/search?q='" + baseWord + "'>Go to Google</a>",
+					var googleLink = "<a href='https://www.google.com/search?q=" + baseWord + "'>Go to Google</a>",
 					    message = "No definitions found. " + googleLink + ".",
 					    errorDiv = '<div class="alert alert-warning" role="alert">' + message + '</div>';
 					$( '#word-definitions' ).html( errorDiv ).show();
