@@ -1,11 +1,14 @@
 jQuery( function() {
-	var wp_url = 'https://public-api.wordpress.com/rest/v1.1/sites/metonymicautodidactic.wordpress.com/posts';
-	var options = { number: 100, order: 'ASC', order_by: 'title', fields: 'title,URL' };
+	var wp_url = 'https://public-api.wordpress.com/wp/v2/sites/metonymicautodidactic.wordpress.com/posts'
+	var page_number = 1;
+	var posts_per_page = 100;
+	var options = { per_page: posts_per_page, order: 'asc', orderby: 'title' };
 
-	function showPosts( data ) {
-		data.posts.forEach( function( post ) {
-			var first_letter = post.title[0].toUpperCase();
-			var link = '<a href="' + post.URL + '">' + post.title + '</a>';
+	function showPosts( data, result, xhr ) {
+		var total_pages = xhr.getResponseHeader("X-WP-TotalPages");
+		data.forEach( function( post ) {
+			var first_letter = post.title.rendered[0].toUpperCase();
+			var link = '<a href="' + post.link + '">' + post.title.rendered + '</a>';
 			var element = '<li>' + link + '</li>';
 			var list = $( '#word-group-' + first_letter );
 
@@ -20,8 +23,9 @@ jQuery( function() {
 			}
 		} );
 		// make requests until we run out of posts
-		if( data.meta.next_page ) {
-			options.page_handle = data.meta.next_page;
+		if( page_number < total_pages ) {
+			options.offset = posts_per_page * page_number;
+			page_number += 1;
 			$.get( wp_url, options, showPosts, 'json' );
 		} else {
 			// done loading
