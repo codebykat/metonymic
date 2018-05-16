@@ -18,7 +18,7 @@ jQuery( function($) {
 		}
 		// redo selected word search
 		if ( $( '#selected-word' ).text() ) {
-			wordnikLookup( $( '#selected-word' ).text() );
+			wordnikLookup( $( '#selected-word' ).text(), true );
 
 		}
 	} );
@@ -225,9 +225,11 @@ jQuery( function($) {
 
 		// linkify every word
 		words.forEach( function( e ) {
+			// trim whitespace
+			e = e.trim();
 
 			// strip off punctuation
-			var punctuation = [ ',', '.', '"', '\u201C', '\u201D', '?', '-', '\u2026', '\u2013', '\u2014' ];
+			var punctuation = [ ',', '.', '"', '!', '—', '’', '‘', ';', '\u201C', '\u201D', '?', '-', '\u2026', '\u2013', '\u2014', '\u2018', '\u2019' ];
 
 			var endPunctuation = '';
 			while ( $.inArray( e[ e.length-1 ], punctuation ) !== -1 ) {
@@ -242,16 +244,27 @@ jQuery( function($) {
 			}
 
 			// sometimes emdashes are in the middle of words
-			var hyphened = e.split( '\u2014' );
-			
+			var midPunctuation = [ '\u2014', '—' ];
+			var splitWords = [ e ];
+			splitWords = e.split(/([\u2014, —]+)/);
 
-			// skip numbers
-			if ( $.isNumeric( e ) ) {
-				linkifiedQuote += ' ' + beginningPunctuation + e + endPunctuation;
-				return;
-			}
+			linkifiedQuote += ' ' + beginningPunctuation;
 
-			linkifiedQuote += " " + beginningPunctuation + "<a href='' class='wordlink'>" + e + "</a>" + endPunctuation;
+			splitWords.forEach ( function( word ) {
+				// skip numbers
+				if ( $.isNumeric( e ) ) {
+					linkifiedQuote += word;
+					return;
+				}
+				// skip punctuation
+				if ( $.inArray( word, midPunctuation ) !== -1 ) {
+					linkifiedQuote += word;
+					return;
+				}
+				linkifiedQuote += "<a href='' class='wordlink'>" + word + "</a>";
+			} );
+
+			linkifiedQuote += endPunctuation;
 		} );
 
 		// replace textarea with blockquote
@@ -270,10 +283,10 @@ jQuery( function($) {
 		$( e.target ).addClass( 'selected' );
 		$( '#selected-word' ).text( word );
 
-		wordnikLookup( word );
+		wordnikLookup( word, true );
 	}
 
-	function wordnikLookup( word ) {
+	function wordnikLookup( word, singularize ) {
 		var api_key = localStorage.getItem( 'wordnik-key' );
 
 		if ( ! api_key ) {
@@ -288,8 +301,11 @@ jQuery( function($) {
 		$( '#word-definitions' ).empty();
 
 		// singularize
-		var baseWord = pluralize( word, 1 );
-		var baseURL = "http://api.wordnik.com:80/v4/word.json/" + baseWord + "/definitions";
+		var baseURL = "http://api.wordnik.com:80/v4/word.json/" + word + "/definitions";
+		if ( singularize !== false ) {
+			var baseWord = pluralize( word, 1 );
+			baseURL = "http://api.wordnik.com:80/v4/word.json/" + baseWord + "/definitions";
+		}
 		
 		var args = {
 			limit: 200,
@@ -307,13 +323,18 @@ jQuery( function($) {
 			success: function( data ) {
 				if ( data.length === 0 ) {
 					// @todo: Add Google search results (API?) or Wikipedia link/results?
-					var googleLink = "<a href='https://www.google.com/search?q=" + baseWord + "'>Go to Google</a>",
+					var googleLink = "<a href='https://www.google.com/search?q=" + word + "'>Go to Google</a>",
 					    message = "No definitions found. " + googleLink + ".",
 					    errorDiv = '<div class="alert alert-warning" role="alert">' + message + '</div>';
 					$( '#word-definitions' ).html( errorDiv ).show();
-					return;
+
+					// try again without singularizing
+					if ( singularize !== false ) {
+						wordnikLookup( word, false );
+					}
 
 					// @todo: add ability to paste custom definition + source attribute if no definitions found (or even if they are?)
+					return;
 				}
 				data.forEach( function( definition ) {
 					$( '#selected-word' ).text( definition.word );
